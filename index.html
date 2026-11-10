@@ -1,0 +1,2539 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f5">
+  <meta name="google-site-verification" content="2NWHDNjDDRg6i8uEgu49pE5QwZShm_bY4UJT2fXyuYI" />
+  <title>Matrícula</title>
+  <script src="img/qrcode.js"></script>
+  <style>
+    :root {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: #20332d;
+      background: #f4f7f5;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      --green: #16745a;
+      --green-dark: #105c47;
+      --ink: #20332d;
+      --muted: #718078;
+      --line: #e3eae5;
+      --cream: #fbfcfa;
+      --red: #b54343
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    .app {
+      min-height: 100vh
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 238px;
+      padding: 25px 17px;
+      background: #123e32;
+      color: white;
+      display: flex;
+      flex-direction: column
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 4px 9px 30px;
+      font-weight: 750;
+      letter-spacing: -.02em
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: #e1f1e8;
+      color: #155c47
+    }
+
+    .brand-icon svg {
+      width: 21px
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 3px;
+      color: #a9c8ba;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase
+    }
+
+    .nav-label {
+      padding: 0 10px 10px;
+      color: #90b1a2;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase
+    }
+
+    .nav-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 11px;
+      border: 0;
+      border-radius: 9px;
+      color: #d6e6de;
+      background: transparent;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 650
+    }
+
+    .nav-item.active,
+    .nav-item:hover {
+      background: #245544;
+      color: white
+    }
+
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      flex: none
+    }
+
+    .school-card {
+      margin-top: auto;
+      padding: 13px;
+      border: 1px solid #376556;
+      border-radius: 11px;
+      background: #1b4b3c
+    }
+
+    .school-card b {
+      display: block;
+      font-size: 12px
+    }
+
+    .school-card span {
+      display: block;
+      margin-top: 5px;
+      color: #b5d0c4;
+      font-size: 11px
+    }
+
+    .main {
+      margin-left: 238px;
+      padding: 30px clamp(20px, 4vw, 56px) 55px;
+      max-width: 1600px
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin: 0 0 28px
+    }
+
+    .crumb {
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .crumb strong {
+      color: var(--ink)
+    }
+
+    .year-chip {
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      color: #496257;
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    .heading-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
+      margin-bottom: 23px
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .14em;
+      text-transform: uppercase
+    }
+
+    .heading-row h1 {
+      margin: 0;
+      font-size: clamp(25px, 3vw, 34px);
+      letter-spacing: -.045em
+    }
+
+    .heading-row p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .primary,
+    .outline,
+    .danger-btn {
+      min-height: 41px;
+      padding: 0 15px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 750
+    }
+
+    .primary {
+      border: 1px solid var(--green);
+      background: var(--green);
+      color: white
+    }
+
+    .primary:hover {
+      background: var(--green-dark)
+    }
+
+    .outline {
+      border: 1px solid var(--line);
+      background: white;
+      color: #385146
+    }
+
+    .outline:hover {
+      background: #f8faf8
+    }
+
+    .danger-btn {
+      border: 1px solid #f0d9d9;
+      background: #fff;
+      color: var(--red)
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 13px;
+      margin-bottom: 19px
+    }
+
+    .stat {
+      padding: 17px 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 650
+    }
+
+    .stat-value {
+      margin-top: 11px;
+      font-size: 25px;
+      font-weight: 760;
+      letter-spacing: -.04em
+    }
+
+    .stat-note {
+      margin-top: 4px;
+      color: #829087;
+      font-size: 10px
+    }
+
+    .stat-mark {
+      float: right;
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: #edf5ef;
+      color: var(--green)
+    }
+
+    .stat-mark svg {
+      width: 17px
+    }
+
+    .stat-matutina .stat-mark {
+      background: #fff4dc;
+      color: #a66b08
+    }
+
+    .stat-vespertina .stat-mark {
+      background: #eaf1ff;
+      color: #3869c8
+    }
+
+    .stat-nocturna .stat-mark {
+      background: #f0ebff;
+      color: #7652bd
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px 12px 0 0;
+      background: white
+    }
+
+    .search {
+      position: relative;
+      flex: 1;
+      min-width: 180px
+    }
+
+    .search svg {
+      position: absolute;
+      left: 12px;
+      top: 11px;
+      width: 16px;
+      color: #87958c
+    }
+
+    .search input {
+      padding-left: 36px
+    }
+
+    .control,
+    input,
+    select,
+    textarea {
+      min-height: 39px;
+      border: 1px solid #dfe7e1;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 12px;
+      outline: none
+    }
+
+    .control {
+      padding: 0 10px
+    }
+
+    .search input {
+      width: 100%;
+      padding-right: 10px
+    }
+
+    .control:focus,
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #72a891;
+      box-shadow: 0 0 0 3px #16745a18
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-top: 0;
+      border-radius: 0 0 12px 12px;
+      background: white
+    }
+
+    .student-table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap
+    }
+
+    .student-table th {
+      padding: 12px 15px;
+      background: #f8faf8;
+      color: #718078;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase
+    }
+
+    .student-table td {
+      padding: 13px 15px;
+      border-top: 1px solid #edf1ed;
+      font-size: 12px
+    }
+
+    .student-table tr:hover td {
+      background: #fcfdfb
+    }
+
+    .student-name {
+      font-weight: 700
+    }
+
+    .student-sub {
+      margin-top: 3px;
+      color: #86928b;
+      font-size: 10px
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 8px;
+      border-radius: 99px;
+      background: #edf5ef;
+      color: #28684f;
+      font-size: 10px;
+      font-weight: 750
+    }
+
+    .health {
+      color: #9a6a24
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 6px
+    }
+
+    .icon-btn {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: white;
+      color: #53665b
+    }
+
+    .icon-btn:hover {
+      background: #f1f7f2;
+      color: var(--green)
+    }
+
+    .icon-btn svg {
+      width: 14px
+    }
+
+    .icon-btn.delete:hover {
+      border-color: #f0d9d9;
+      background: #fff5f5;
+      color: var(--red)
+    }
+
+    .empty {
+      padding: 46px 20px !important;
+      text-align: center;
+      color: var(--muted)
+    }
+
+    .empty strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink)
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: #10251dcc
+    }
+
+    .overlay.open {
+      display: flex
+    }
+
+    .modal {
+      width: min(100%, 760px);
+      max-height: min(92vh, 900px);
+      overflow: auto;
+      border-radius: 15px;
+      background: white;
+      box-shadow: 0 24px 80px #0003
+    }
+
+    .modal-head {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 23px;
+      border-bottom: 1px solid var(--line);
+      background: white
+    }
+
+    .modal-head h2 {
+      margin: 0;
+      font-size: 19px;
+      letter-spacing: -.03em
+    }
+
+    .modal-head p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 11px
+    }
+
+    .close {
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 8px;
+      background: #f3f6f3;
+      color: #52635a;
+      font-size: 20px
+    }
+
+    .form-body {
+      padding: 20px 23px
+    }
+
+    .form-section {
+      margin: 0 0 19px
+    }
+
+    .form-section h3 {
+      margin: 0 0 12px;
+      padding-bottom: 9px;
+      border-bottom: 1px solid var(--line);
+      color: #27634e;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px
+    }
+
+    .field {
+      min-width: 0
+    }
+
+    .field.span2 {
+      grid-column: span 2
+    }
+
+    .field.full {
+      grid-column: 1/-1
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: #52635a;
+      font-size: 10px;
+      font-weight: 750
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 9px 10px
+    }
+
+    .field textarea {
+      min-height: 64px;
+      resize: vertical
+    }
+
+    .field select#modality {
+      font-size: 9pt;
+      text-transform: uppercase
+    }
+
+    .checkline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      color: #52635a;
+      font-size: 11px
+    }
+
+    .checkline input {
+      min-height: auto;
+      width: 15px;
+      height: 15px;
+      accent-color: var(--green)
+    }
+
+    .modal-foot {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      padding: 14px 23px;
+      border-top: 1px solid var(--line);
+      background: #fbfcfa
+    }
+
+    .notice {
+      display: none;
+      margin: 0 23px 15px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #eff8f2;
+      color: #216347;
+      font-size: 11px
+    }
+
+    .notice.show {
+      display: block
+    }
+
+    .notice.error {
+      background: #fff1f1;
+      color: #9f3434
+    }
+
+    .print-sheet {
+      display: none
+    }
+
+    @media(max-width:950px) {
+      .sidebar {
+        width: 68px;
+        padding: 20px 9px
+      }
+
+      .brand {
+        justify-content: center;
+        padding: 4px 0 26px
+      }
+
+      .brand-name,
+      .nav-label,
+      .nav-item span,
+      .school-card {
+        display: none
+      }
+
+      .nav-item {
+        justify-content: center;
+        padding: 12px
+      }
+
+      .main {
+        margin-left: 68px
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+    }
+
+    @media(max-width:650px) {
+      .main {
+        padding: 20px 14px 40px
+      }
+
+      .topbar {
+        margin-bottom: 20px
+      }
+
+      .heading-row {
+        align-items: flex-start;
+        flex-direction: column
+      }
+
+      .heading-row .primary {
+        width: 100%
+      }
+
+      .stats {
+        gap: 8px
+      }
+
+      .stat {
+        padding: 13px
+      }
+
+      .stat-value {
+        font-size: 21px
+      }
+
+      .toolbar {
+        flex-wrap: wrap
+      }
+
+      .search {
+        flex-basis: 100%
+      }
+
+      .toolbar select {
+        flex: 1;
+        min-width: 95px
+      }
+
+      .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      .field.full {
+        grid-column: 1/-1
+      }
+
+      .student-table th,
+      .student-table td {
+        padding: 11px 12px
+      }
+    }
+
+    .report-panel {
+      margin: 0 0 20px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff
+    }
+
+    .report-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 13px
+    }
+
+    .report-heading .eyebrow {
+      margin-bottom: 5px
+    }
+
+    .report-heading h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -.03em
+    }
+
+    .report-heading p:last-child {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 11px
+    }
+
+    .report-subheading {
+      margin: 16px 0 8px;
+      color: #315d4b;
+      font-size: 12px
+    }
+
+    .report-wrap {
+      border-radius: 9px
+    }
+
+    .report-table th,
+    .report-table td {
+      text-align: center
+    }
+
+    .report-table th:first-child,
+    .report-table td:first-child {
+      text-align: left
+    }
+
+    .report-table tfoot td {
+      font-weight: 800;
+      background: #f4f8f4
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    .brand-icon {
+      position: relative;
+      overflow: hidden
+    }
+
+    .brand-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 10px
+    }
+
+    .settings-view {
+      max-width: 1100px
+    }
+
+    .settings-heading {
+      margin-bottom: 18px
+    }
+
+    .settings-card {
+      margin: 0 0 16px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff
+    }
+
+    .settings-card-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px
+    }
+
+    .settings-card-heading h2 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: -.03em
+    }
+
+    .settings-card-heading p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .settings-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 15px
+    }
+
+    .teacher-fields {
+      grid-template-columns: repeat(3, minmax(0, 1fr))
+    }
+
+    .school-logo-preview {
+      display: block;
+      width: 76px;
+      height: 76px;
+      margin-top: 10px;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff
+    }
+
+    .settings-notice {
+      display: none;
+      margin: 0 0 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #eff8f2;
+      color: #216347;
+      font-size: 12px
+    }
+
+    .settings-notice.visible {
+      display: block
+    }
+
+    .settings-notice.error {
+      background: #fff1f1;
+      color: #9f3434
+    }
+
+    .teachers-wrap {
+      margin-top: 17px;
+      border-top: 1px solid var(--line);
+      border-radius: 9px
+    }
+
+    .teacher-remove {
+      min-height: 30px;
+      padding: 0 9px;
+      border: 1px solid #f0d9d9;
+      border-radius: 7px;
+      background: #fff;
+      color: var(--red);
+      font-size: 11px;
+      font-weight: 700
+    }
+
+    .print-logo {
+      width: 46px;
+      height: 46px;
+      object-fit: contain
+    }
+
+    .print-head-copy {
+      flex: 1
+    }
+
+    .print-school-name {
+      margin: 0 0 3px !important;
+      font-size: 10pt !important;
+      font-weight: bold;
+      text-align: center
+    }
+
+    .print-head-copy h1 {
+      margin: 0
+    }
+
+    .print-stamp {
+      margin-left: 10px
+    }
+
+    .print-verify-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      width: 108px;
+      margin: 0;
+      padding: 0;
+      text-align: center
+    }
+
+    .print-verify-meta {
+      min-width: 0;
+      max-width: 340px
+    }
+
+    .print-verify-meta strong {
+      display: none
+    }
+
+    .print-verify-meta .student-sub {
+      margin-top: 3px;
+      color: #5a6b63;
+      font-size: 8.5pt
+    }
+
+    .print-verify-code {
+      display: none
+    }
+
+    .print-qrcode-img {
+      width: 104px;
+      height: 104px;
+      display: block;
+      flex: none;
+      border: 0;
+      border-radius: 0;
+      background: white;
+      padding: 0
+    }
+
+    @media(max-width:650px) {
+
+      .settings-fields,
+      .teacher-fields {
+        grid-template-columns: 1fr
+      }
+
+      .settings-card {
+        padding: 15px
+      }
+
+      .report-heading {
+        align-items: flex-start;
+        flex-direction: column
+      }
+    }
+
+    @media print {
+      @page {
+        size: letter portrait;
+        margin: 0.55cm 0.65cm
+      }
+
+      html,
+      body {
+        width: auto !important;
+        min-height: 0;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box
+      }
+
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color: #111
+      }
+
+      .app,
+      .overlay {
+        display: none !important
+      }
+
+      .print-sheet {
+        position: relative !important;
+        isolation: isolate;
+        display: block !important;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 6px 8px;
+        border: 1px solid #333;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        break-after: avoid-page;
+        page-break-after: avoid;
+        color: #111;
+        font: 9pt/1.08 "Times New Roman", Times, serif;
+        text-align: justify;
+        overflow: visible
+      }
+
+      .print-watermark {
+        position: absolute !important;
+        z-index: 0 !important;
+        inset: 0;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none
+      }
+
+      .print-watermark img {
+        display: block;
+        width: min(58%, 12cm);
+        max-height: 16cm;
+        object-fit: contain;
+        opacity: .10;
+        filter: grayscale(1)
+      }
+
+      .print-sheet>*:not(.print-watermark) {
+        position: relative;
+        z-index: 1
+      }
+
+      .print-sheet * {
+        font-family: "Times New Roman", Times, serif !important;
+        font-size: 8.7pt !important
+      }
+
+      .print-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        min-height: 108px;
+        position: relative;
+        margin-left: 0;
+        border-bottom: 1.5px solid #222;
+        padding: 4px 115px;
+        margin-bottom: 4px
+      }
+
+      .print-head>div:first-child {
+        flex: 1
+      }
+
+      .print-head-copy {
+        text-align: center
+      }
+
+      .print-head h1 {
+        margin: 0;
+        font-size: 12pt !important;
+        text-align: center
+      }
+
+      .print-head p {
+        margin: 2px 0 0;
+        font-size: 8.7pt !important;
+        text-align: center
+      }
+
+      .print-stamp {
+        position: absolute;
+        top: 4px;
+        right: 0;
+        border: 1px solid #333;
+        padding: 4px 6px;
+        font-weight: bold;
+        white-space: nowrap
+      }
+
+      .print-section {
+        width: 100%;
+        margin: 2px 0;
+        break-inside: avoid;
+        page-break-inside: avoid
+      }
+
+      .print-section h2 {
+        margin: 0 0 2px;
+        padding: 2px 5px;
+        background: #eee;
+        font-size: 10pt;
+        line-height: 1.2;
+        text-transform: uppercase
+      }
+
+      .print-grid {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1px 5px
+      }
+
+      .print-field {
+        min-width: 0;
+        min-height: 18px;
+        padding: 1px 2px;
+        border-bottom: 1px solid #888;
+        overflow-wrap: anywhere
+        text-align: center
+      }
+
+      .print-field.wide {
+        grid-column: span 2
+      }
+
+      .print-label {
+        display: block;
+        width: 100%;
+        color: #444;
+        font-size: 7.5pt;
+        line-height: 1.05;
+        text-align: center !important;
+        text-transform: uppercase
+      }
+
+      .print-value {
+        display: block;
+        width: 100%;
+        margin-top: 1px;
+        font-size: 9pt;
+        line-height: 1.05;
+        font-weight: 700;
+        color: #007c91;
+        text-align: center !important;
+        text-transform: lowercase
+      }
+
+      .print-value::first-letter {
+        text-transform: uppercase
+      }
+
+      .print-sheet .print-value {
+        font-size: 8.7pt !important;
+        line-height: 1.05;
+        margin-top: 1px
+      }
+
+      .print-field.modality-field .print-value {
+        font-size: 7.5pt !important;
+        text-transform: uppercase
+      }
+
+      .print-report-subtitle {
+        margin: 14px 0 5px;
+        padding: 4px 6px;
+        background: #eee;
+        font-size: 12pt;
+        text-transform: uppercase
+      }
+
+      .print-report-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0;
+        font-size: 12pt
+      }
+
+      .print-report-table th,
+      .print-report-table td {
+        padding: 9px;
+        border: 1px solid #8a968e;
+        text-align: center
+      }
+
+      .print-report-table th {
+        background: #e9f0eb;
+        font-weight: bold
+      }
+
+      .print-report-table th:first-child,
+      .print-report-table td:first-child {
+        text-align: left
+      }
+
+      .print-report-table tfoot td {
+        font-weight: bold;
+        background: #f1f4f1
+      }
+
+      .print-checks {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding: 3px 0
+      }
+
+      .print-check {
+        white-space: nowrap
+      }
+
+      .print-declaration {
+        margin: 4px 0 2px;
+        font-size: 7.5px;
+        line-height: 1.1;
+        text-align: justify
+      }
+
+      .signature-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 22px;
+        margin: 10px 8px 0;
+        text-align: center
+      }
+
+      .signature {
+        width: 50%;
+        border-top: 1px solid #333;
+        padding-top: 3px;
+        font-size: 8.7pt;
+        line-height: 1.1
+      }
+
+      .print-sheet>.print-section:last-of-type h2 {
+        font-size: 9.5pt
+      }
+
+      .print-sheet>.print-section:last-of-type .print-label {
+        font-size: 7.5pt
+      }
+
+      .print-sheet>.print-section:last-of-type .print-value,
+      .print-declaration,
+      .signature {
+        font-size: 8.7pt
+      }
+
+      .print-sheet>.print-verify-box {
+        position: absolute !important;
+        z-index: 2;
+        top: 7px;
+        left: 8px
+      }
+
+      .print-sheet:has(.print-verify-box) {
+        display: flex !important;
+        min-height: 26.8cm;
+        flex-direction: column;
+        justify-content: space-between
+      }
+
+      .print-verify-meta {
+        display: none
+      }
+    }
+
+    .auth-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: radial-gradient(ellipse at 15% 10%, #dcefe6 0, transparent 40%), linear-gradient(145deg, #f4f7f5, #eaf1ed)
+    }
+
+    .auth-screen[hidden] {
+      display: none !important
+    }
+
+    .auth-card {
+      width: min(100%, 430px);
+      padding: 34px;
+      border: 1px solid #e0e8e2;
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: 0 24px 70px #163b2d1c
+    }
+
+    .auth-logo-wrap {
+      width: 82px;
+      height: 82px;
+      margin: 0 auto 18px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: #fff
+    }
+
+    .auth-logo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain
+    }
+
+    .auth-eyebrow {
+      text-align: center;
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .14em;
+      text-transform: uppercase
+    }
+
+    .auth-card h1 {
+      margin: 9px 0 0;
+      text-align: center;
+      font-size: 26px;
+      letter-spacing: -.04em
+    }
+
+    .auth-intro {
+      margin: 8px 0 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .auth-form {
+      display: grid;
+      gap: 9px
+    }
+
+    .auth-form[hidden] {
+      display: none !important
+    }
+
+    .auth-form label {
+      margin-top: 5px;
+      color: #435b4e;
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    .auth-form input {
+      width: 100%;
+      min-height: 43px;
+      padding: 10px 12px;
+      font-size: 14px
+    }
+
+    .auth-submit {
+      width: 100%;
+      min-height: 45px;
+      margin-top: 9px;
+      font-size: 13px
+    }
+
+    .auth-notice {
+      display: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #fff0f0;
+      color: #a03535;
+      font-size: 12px;
+      line-height: 1.4
+    }
+
+    .auth-notice.visible {
+      display: block
+    }
+
+    .auth-notice.recovery-info {
+      background: #eff6ff;
+      color: #365e83
+    }
+
+    .setup-note {
+      padding: 11px 12px;
+      border-radius: 9px;
+      background: #eef7f1;
+      color: #35644d;
+      font-size: 12px;
+      line-height: 1.45
+    }
+
+    .auth-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-top: 14px
+    }
+
+    .auth-link {
+      border: 0;
+      background: transparent;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 750;
+      text-decoration: underline;
+      text-underline-offset: 3px
+    }
+
+    .auth-link:hover {
+      color: var(--green-dark)
+    }
+
+    .auth-footer {
+      margin: 20px 0 0;
+      text-align: center;
+      color: #89958d;
+      font-size: 11px
+    }
+
+    .teacher-fields {
+      grid-template-columns: repeat(4, minmax(0, 1fr))
+    }
+
+    @media(max-width:650px) {
+      .auth-screen {
+        padding: 15px
+      }
+
+      .auth-card {
+        padding: 26px 21px
+      }
+
+      .teacher-fields {
+        grid-template-columns: 1fr
+      }
+    }
+
+    :root {
+      --green: #087f8c;
+      --green-dark: #066673;
+      --ink: #203b4a;
+      --muted: #6b7f89;
+      --line: #dce8ec;
+      --cream: #f8fbfc;
+      --red: #bc5260;
+      background: #f2f7f8;
+      color: var(--ink)
+    }
+
+    body {
+      background: radial-gradient(ellipse at 85% 0%, #e1f2f4 0, transparent 31%), #f2f7f8
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, #15536a, #163f5c 68%, #243e68);
+      box-shadow: 6px 0 26px #193d5014
+    }
+
+    .brand-icon {
+      background: #d9f1ef;
+      color: #087f8c
+    }
+
+    .nav-item {
+      color: #d9eaf1
+    }
+
+    .nav-item.active,
+    .nav-item:hover {
+      background: #ffffff1c;
+      color: #fff
+    }
+
+    .nav-label {
+      color: #a9cbd7
+    }
+
+    .school-card {
+      border-color: #497186;
+      background: #ffffff12
+    }
+
+    .school-card span {
+      color: #c4dce5
+    }
+
+    .main {
+      background: transparent
+    }
+
+    .year-chip {
+      border-color: #d5e6eb;
+      background: #fff;
+      color: #276577
+    }
+
+    .heading-row h1,
+    .report-heading h2,
+    .settings-card-heading h2 {
+      color: #1d4052
+    }
+
+    .primary {
+      border-color: #087f8c;
+      background: linear-gradient(135deg, #098f9c, #087f8c);
+      box-shadow: 0 4px 12px #087f8c24
+    }
+
+    .primary:hover {
+      background: linear-gradient(135deg, #087f8c, #066673)
+    }
+
+    .outline {
+      border-color: #d6e5e9;
+      color: #286071
+    }
+
+    .outline:hover {
+      background: #eff8f8;
+      border-color: #a8d4d8
+    }
+
+    .stat,
+    .report-panel,
+    .settings-card,
+    .table-wrap,
+    .toolbar {
+      border-color: #dce8ec;
+      box-shadow: 0 5px 18px #204a5a0a
+    }
+
+    .stat {
+      border-top: 3px solid #94d5d8;
+      background: linear-gradient(150deg, #fff, #fbfefe)
+    }
+
+    .stat:nth-child(2) {
+      border-top-color: #b5c7ef
+    }
+
+    .stat:nth-child(3) {
+      border-top-color: #f0d399
+    }
+
+    .stat:nth-child(4) {
+      border-top-color: #edb9ac
+    }
+
+    .stat:nth-child(5) {
+      border-top-color: #c6b5e7
+    }
+
+    .stat:nth-child(6) {
+      border-top-color: #a9d7bd
+    }
+
+    .stat-mark {
+      background: #e3f5f3;
+      color: #07828d
+    }
+
+    .stat-matutina .stat-mark {
+      background: #fff4dd;
+      color: #a66b08
+    }
+
+    .stat-vespertina .stat-mark {
+      background: #eaf0ff;
+      color: #536db4
+    }
+
+    .stat-nocturna .stat-mark {
+      background: #f1ebff;
+      color: #7955ac
+    }
+
+    .student-table th {
+      background: #eaf4f5;
+      color: #466574
+    }
+
+    .student-table td {
+      border-top-color: #e6eef0
+    }
+
+    .student-table tr:hover td {
+      background: #f1f8f8
+    }
+
+    .badge {
+      background: #e4f4ef;
+      color: #257355
+    }
+
+    .health {
+      color: #ac7040
+    }
+
+    .form-section h3 {
+      color: #087f8c;
+      background: linear-gradient(90deg, #eff8f7, transparent);
+      padding: 8px 10px;
+      border-bottom-color: #d5e9e7;
+      border-radius: 6px
+    }
+
+    .field input,
+    .field select,
+    .field textarea,
+    .control {
+      border-color: #d8e5e9
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus,
+    .control:focus,
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #56b7bb;
+      box-shadow: 0 0 0 3px #0a879015
+    }
+
+    .modal-head {
+      background: #f5fafb
+    }
+
+    .modal-foot {
+      background: #f3f8f8
+    }
+
+    .settings-card-heading h2 {
+      color: #24576a
+    }
+
+    .settings-notice.visible {
+      background: #e9f6ef;
+      color: #27694f
+    }
+
+    .teacher-remove {
+      border-color: #f0d6d9;
+      background: #fff8f8;
+      color: #ad4957
+    }
+
+    .auth-screen {
+      background: radial-gradient(ellipse at 16% 12%, #d7eff0 0, transparent 42%), radial-gradient(ellipse at 88% 84%, #e9e2f5 0, transparent 34%), linear-gradient(145deg, #f1f8f8, #edf2f8)
+    }
+
+    .auth-card {
+      border-color: #d9e8ec;
+      box-shadow: 0 24px 70px #163b2d1b
+    }
+
+    .auth-logo-wrap {
+      border-color: #cfe3e6
+    }
+
+    .auth-link {
+      color: #087f8c
+    }
+
+    @media print {
+      .print-sheet {
+        border-color: #7faeb7 !important
+      }
+
+      .print-head {
+        border-bottom-color: #72aeb4 !important
+      }
+
+      .print-head h1,
+      .print-school-name {
+        color: #126d79 !important
+      }
+
+      .print-stamp {
+        border-color: #72aeb4 !important;
+        background: #f3f9f8 !important
+      }
+
+      .print-section h2,
+      .print-report-subtitle {
+        background: #eaf4f3 !important;
+        color: #245e68 !important;
+        border-left: 3px solid #78b9bd
+      }
+
+      .print-field {
+        border-bottom-color: #a9c4c9 !important
+      }
+
+      .print-label {
+        color: #47616a !important
+      }
+
+      .print-value {
+        color: #087f8c !important
+      }
+
+      .print-report-table th {
+        background: #eaf4f3 !important;
+        color: #245e68 !important
+      }
+
+      .print-report-table th,
+      .print-report-table td {
+        border-color: #a9c4c9 !important
+      }
+
+      .print-report-table tfoot td {
+        background: #f2f8f5 !important
+      }
+
+      .signature {
+        border-top-color: #77aeb5 !important
+      }
+
+      .print-watermark img {
+        opacity: .075;
+        filter: grayscale(.25) sepia(.18) hue-rotate(135deg) saturate(.75)
+      }
+    }
+
+    /* Ajustes para teléfonos */
+    @media(max-width:650px) {
+      body {
+        min-width: 320px
+      }
+
+      .sidebar {
+        inset: auto 0 0;
+        width: 100%;
+        height: auto;
+        min-height: 64px;
+        padding: 7px max(8px, env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
+        z-index: 10;
+        border-radius: 14px 14px 0 0;
+        box-shadow: 0 -5px 22px #193d5024
+      }
+
+      .brand,
+      .nav-label,
+      .school-card {
+        display: none
+      }
+
+      .nav-item,
+      .nav-item span {
+        display: flex
+      }
+
+      .nav-item {
+        min-width: 0;
+        min-height: 48px;
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        gap: 3px;
+        padding: 5px 3px;
+        border-radius: 9px;
+        font-size: 10px;
+        text-align: center
+      }
+
+      .nav-item svg {
+        width: 19px;
+        height: 19px
+      }
+
+      .main {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 17px 12px calc(84px + env(safe-area-inset-bottom))
+      }
+
+      .topbar {
+        gap: 8px;
+        margin-bottom: 18px
+      }
+
+      .crumb {
+        font-size: 10px
+      }
+
+      .year-chip {
+        padding: 7px;
+        font-size: 10px;
+        white-space: nowrap
+      }
+
+      .heading-row {
+        gap: 12px;
+        margin-bottom: 17px
+      }
+
+      .heading-row h1 {
+        font-size: 26px
+      }
+
+      .heading-row p {
+        font-size: 12px;
+        line-height: 1.45
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px
+      }
+
+      .stat {
+        min-width: 0;
+        padding: 12px
+      }
+
+      .stat-value {
+        font-size: 20px
+      }
+
+      .stat-mark {
+        width: 27px;
+        height: 27px
+      }
+
+      .toolbar {
+        gap: 8px;
+        padding: 10px
+      }
+
+      .search {
+        min-width: 0
+      }
+
+      .toolbar select {
+        min-width: 0;
+        max-width: 100%;
+        font-size: 11px
+      }
+
+      .table-wrap {
+        max-width: 100%;
+        overscroll-behavior-x: contain;
+        -webkit-overflow-scrolling: touch
+      }
+
+      .student-table {
+        min-width: 620px
+      }
+
+      .report-panel {
+        padding: 13px
+      }
+
+      .report-heading h2 {
+        font-size: 16px
+      }
+
+      .settings-card {
+        padding: 14px
+      }
+
+      .settings-card-heading {
+        flex-direction: column
+      }
+
+      .settings-fields,
+      .teacher-fields {
+        grid-template-columns: minmax(0, 1fr)
+      }
+
+      .overlay {
+        align-items: flex-end;
+        padding: 0
+      }
+
+      .modal {
+        width: 100%;
+        max-height: 94dvh;
+        max-height: 94vh;
+        border-radius: 16px 16px 0 0;
+        padding-bottom: env(safe-area-inset-bottom)
+      }
+
+      .modal-head {
+        padding: 16px
+      }
+
+      .form-body {
+        padding: 16px
+      }
+
+      .modal-foot {
+        position: sticky;
+        bottom: 0;
+        padding: 12px 16px
+      }
+
+      .notice {
+        margin-right: 16px;
+        margin-left: 16px
+      }
+
+      .auth-screen {
+        padding: 12px;
+        overflow-y: auto
+      }
+
+      .auth-card {
+        width: 100%;
+        max-width: 430px;
+        padding: 24px 19px
+      }
+
+      .auth-card h1 {
+        font-size: 23px
+      }
+
+      input,
+      select,
+      textarea,
+      button {
+        touch-action: manipulation
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section id="authScreen" class="auth-screen" aria-label="Inicio de sesión" hidden>
+    <div class="auth-card">
+      <div id="authLogoWrap" class="auth-logo-wrap" hidden><img id="authLogo" alt="Logotipo del centro educativo"></div>
+      <p id="authYearLabel" class="auth-eyebrow">Matrícula</p>
+      <h1 id="authSchoolName">Bienvenido</h1>
+      <p id="authIntro" class="auth-intro">Inicia sesión con tu cuenta docente.</p>
+      <form id="loginForm" class="auth-form" hidden><label for="loginUsername">Nombre de usuario</label><input
+          id="loginUsername" name="username" autocomplete="username" required><label
+          for="loginPassword">Contraseña</label><input id="loginPassword" name="password" type="password"
+          autocomplete="current-password" required>
+        <div id="loginNotice" class="auth-notice" role="alert"></div><button class="primary auth-submit"
+          type="submit">Iniciar sesión</button>
+      </form>
+      <form id="setupAdminForm" class="auth-form" hidden>
+        <div class="setup-note">Crea la cuenta administradora para comenzar. Luego podrás registrar los usuarios
+          docentes.</div><label for="adminName">Nombre completo</label><input id="adminName" name="name"
+          autocomplete="name" required maxlength="120"><label for="adminUsername">Nombre de usuario</label><input
+          id="adminUsername" name="username" autocomplete="username" required minlength="3" maxlength="40"><label
+          for="adminEmail">Correo electrónico</label><input id="adminEmail" name="email" type="email"
+          autocomplete="email" maxlength="120"><label for="adminPassword">Contraseña (mínimo 8 caracteres)</label><input
+          id="adminPassword" name="password" type="password" autocomplete="new-password" required minlength="8"><label
+          for="adminPasswordConfirm">Confirmar contraseña</label><input id="adminPasswordConfirm" name="passwordConfirm"
+          type="password" autocomplete="new-password" required minlength="8">
+        <div id="setupNotice" class="auth-notice" role="alert"></div><button class="primary auth-submit"
+          type="submit">Crear administrador</button>
+      </form>
+      <form id="registerForm" class="auth-form" hidden><label for="registerName">Nombre completo</label><input
+          id="registerName" name="name" autocomplete="name" required maxlength="120"><label
+          for="registerUsername">Nombre de usuario</label><input id="registerUsername" name="username"
+          autocomplete="username" required minlength="3" maxlength="40"><label for="registerEmail">Correo
+          electrónico</label><input id="registerEmail" name="email" type="email" autocomplete="email" required
+          maxlength="120"><label for="registerPassword">Contraseña (mínimo 8 caracteres)</label><input
+          id="registerPassword" name="password" type="password" autocomplete="new-password" required minlength="8">
+        <div id="registerNotice" class="auth-notice" role="alert"></div><button class="primary auth-submit"
+          type="submit">Crear cuenta docente</button>
+      </form>
+      <form id="recoverForm" class="auth-form" hidden>
+        <p class="auth-intro">Ingresa el correo electrónico asociado a tu cuenta.</p><label for="recoverEmail">Correo
+          electrónico</label><input id="recoverEmail" name="email" type="email" autocomplete="email" required>
+        <div id="recoverNotice" class="auth-notice" role="status"></div><button class="primary auth-submit"
+          type="submit">Solicitar recuperación</button>
+      </form>
+      <div id="authActions" class="auth-actions" hidden><button id="showRegister" class="auth-link"
+          type="button">Registrar</button><button id="showLogin" class="auth-link" type="button" hidden>Volver a iniciar
+          sesión</button><button id="showRecovery" class="auth-link" type="button" hidden>¿Olvidaste tu
+          contraseña?</button><button id="recoveryBack" class="auth-link" type="button" hidden>Volver a iniciar
+          sesión</button></div>
+      <p class="auth-footer">Acceso para personal autorizado</p>
+    </div>
+  </section>
+  <div class="app" id="appShell" hidden>
+    <aside class="sidebar">
+      <div class="brand"><span id="brandIcon" class="brand-icon" hidden><img id="schoolLogo" alt="Logotipo del centro"
+            hidden></span><span id="brandName" class="brand-name">Matrícula</span></div>
+      <div class="nav-label">Administración</div>
+      <button id="navStudents" class="nav-item active" type="button"><svg viewBox="0 0 24 24" fill="none">
+          <path d="M4 5h16v15H4zM8 3v4m8-4v4M4 10h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg><span id="navStudentsYearLabel">Matrícula</span></button>
+      <button id="navSettings" class="nav-item" type="button"><svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7" />
+          <path
+            d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a7.8 7.8 0 0 1-1.5.9l-.3 1.8h-2.8l-.3-1.8a7.8 7.8 0 0 1-1.5-.9l-1.7.6-1.4-2.4 1.4-1.1a7 7 0 0 1 0-1.8l-1.4-1.1 1.4-2.4 1.7.6a7.8 7.8 0 0 1 1.5-.9l.3-1.8h2.8l.3 1.8a7.8 7.8 0 0 1 1.5.9l1.7-.6 1.4 2.4-1.4 1.1a7 7 0 0 1 0 1.8Z"
+            stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+        </svg><span>Configuración</span></button>
+      <button id="exitApp" class="nav-item exit-item" type="button" title="Salir de la aplicación"><svg
+          viewBox="0 0 24 24" fill="none">
+          <path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5m5-4 4-4-4-4m4 4H9" stroke="currentColor" stroke-width="1.7"
+            stroke-linecap="round" stroke-linejoin="round" />
+        </svg><span>Salir</span></button>
+      <div class="school-card"><b id="schoolNameCard">Período lectivo</b><span id="schoolYearLabel">Año escolar</span></div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div class="crumb">Administración&nbsp; / &nbsp;<strong>Matrícula</strong></div>
+        <div id="currentYearChip" class="year-chip"> &nbsp;Año lectivo</div>
+      </header>
+      <section id="dashboardHeading" class="heading-row">
+        <div>
+          <p class="eyebrow">Registro Académico</p>
+          <h1>Matrícula de Estudiantes</h1>
+          <p>Organiza las fichas por grado, sección y jornada.</p>
+        </div><button id="addStudent" class="primary" type="button">＋ &nbsp;Nueva ficha de estudiante</button>
+      </section>
+      <section id="dashboardStats" class="stats" aria-label="Resumen de matrícula">
+        <article class="stat"><span class="stat-mark"><svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20m6-9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-6a4 4 0 0 1 0 7.7M17 15h1.5a3.5 3.5 0 0 1 3.5 3.5V20"
+                stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+            </svg></span>
+          <div class="stat-label">Estudiantes matriculados</div>
+          <div class="stat-value" id="totalStat">0</div>
+          <div id="recordsYearNote" class="stat-note">Registros del año</div>
+        </article>
+        <article class="stat"><span class="stat-mark"><svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 20V8l8-5 8 5v12M9 20v-6h6v6" stroke="currentColor" stroke-width="1.7"
+                stroke-linejoin="round" />
+            </svg></span>
+          <div class="stat-label">Grados con matrícula</div>
+          <div class="stat-value" id="gradesStat">0</div>
+          <div class="stat-note">Grados distintos registrados</div>
+        </article>
+        <article class="stat stat-matutina"><span class="stat-mark"><svg viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7" />
+              <path
+                d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"
+                stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+            </svg></span>
+          <div class="stat-label">Jornada matutina</div>
+          <div class="stat-value" id="morningStat">0</div>
+          <div class="stat-note">Estudiantes en la mañana</div>
+        </article>
+        <article class="stat stat-vespertina"><span class="stat-mark"><svg viewBox="0 0 24 24" fill="none">
+              <path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z" stroke="currentColor" stroke-width="1.7"
+                stroke-linejoin="round" />
+              <path d="M16 4v4m-2-2h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg></span>
+          <div class="stat-label">Jornada vespertina</div>
+          <div class="stat-value" id="afternoonStat">0</div>
+          <div class="stat-note">Estudiantes en la tarde</div>
+        </article>
+        <article class="stat stat-nocturna"><span class="stat-mark"><svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3 9.5 9.5 3 12l6.5 2.5L12 21l2.5-6.5L21 12l-6.5-2.5L12 3Z" stroke="currentColor"
+                stroke-width="1.7" stroke-linejoin="round" />
+            </svg></span>
+          <div class="stat-label">Jornada nocturna</div>
+          <div class="stat-value" id="nightStat">0</div>
+          <div class="stat-note">Estudiantes en la noche</div>
+        </article>
+        <article class="stat"><span class="stat-mark"><svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v18m-6-6 6 6 6-6M6 9l6-6 6 6" stroke="currentColor" stroke-width="1.7"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg></span>
+          <div class="stat-label">Con alerta de salud</div>
+          <div class="stat-value" id="healthStat">0</div>
+          <div class="stat-note">Requieren atención registrada</div>
+        </article>
+      </section>
+      <section id="dashboardReport" class="report-panel" aria-labelledby="reportTitle">
+        <div class="report-heading">
+          <div>
+            <p class="eyebrow">Resumen escolar</p>
+            <h2 id="reportTitle">Reporte por grado</h2>
+            <p>Estudiantes matriculados de séptimo a duodécimo, organizados por jornada.</p>
+          </div><button id="printReport" class="outline" type="button">Imprimir reporte</button>
+        </div>
+        <div class="table-wrap report-wrap">
+          <table class="student-table report-table">
+            <thead>
+              <tr>
+                <th>Grado</th>
+                <th>Matutina</th>
+                <th>Vespertina</th>
+                <th>Nocturna</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody id="gradeReportRows"></tbody>
+          </table>
+        </div>
+        <h3 class="report-subheading">Desglose de 10mo por modalidad</h3>
+        <div class="table-wrap report-wrap">
+          <table class="student-table report-table">
+            <thead>
+              <tr>
+                <th>Modalidad</th>
+                <th>Matutina</th>
+                <th>Vespertina</th>
+                <th>Nocturna</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody id="grade10ModalityRows"></tbody>
+          </table>
+        </div>
+      </section>
+      <section id="studentList" aria-label="Listado de estudiantes">
+        <div class="toolbar">
+          <div class="search"><svg viewBox="0 0 24 24" fill="none">
+              <circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8" />
+              <path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg><input id="searchInput" type="search" placeholder="Buscar por nombre o identidad..."
+              aria-label="Buscar estudiantes"></div><select id="gradeFilter" class="control"
+            aria-label="Filtrar por grado">
+            <option value="">Todos los grados</option>
+          </select><select id="sectionFilter" class="control" aria-label="Filtrar por sección">
+            <option value="">Todas las secciones</option>
+          </select><select id="shiftFilter" class="control" aria-label="Filtrar por jornada">
+            <option value="">Todas las jornadas</option>
+            <option>Matutina</option>
+            <option>Vespertina</option>
+            <option>Nocturna</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="student-table">
+            <thead>
+              <tr>
+                <th>Estudiante</th>
+                <th>Grado / sección</th>
+                <th>Jornada</th>
+                <th>Identidad</th>
+                <th>Salud</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="studentRows"></tbody>
+          </table>
+        </div>
+      </section>
+      <section id="settingsView" class="settings-view" hidden aria-labelledby="settingsTitle">
+        <div class="heading-row settings-heading">
+          <div>
+            <p class="eyebrow">Administración del sistema</p>
+            <h1 id="settingsTitle">Configuración del centro</h1>
+            <p>Personaliza la institución y administra el registro de docentes.</p>
+          </div>
+        </div>
+        <section class="settings-card">
+          <div class="settings-card-heading">
+            <div>
+              <h2>Datos del centro educativo</h2>
+              <p>El nombre y el logotipo aparecerán en la interfaz y en las fichas impresas.</p>
+            </div>
+          </div>
+          <form id="schoolSettingsForm">
+            <div class="settings-fields">
+              <div class="field"><label for="schoolNameInput">Nombre del centro educativo</label><input
+                  id="schoolNameInput" name="schoolName" required maxlength="120"
+                  placeholder="Nombre del instituto o centro"></div>
+              <div class="field"><label for="recoveryEmailInput">Correo para recuperar contraseñas</label><input
+                  id="recoveryEmailInput" name="recoveryEmail" type="email" maxlength="120"
+                  placeholder="administracion@centro.edu"></div>
+              <div class="field"><label for="schoolLogoInput">Imagen del centro (PNG, JPG o WebP, máximo 1
+                  MB)</label><input id="schoolLogoInput" name="schoolLogo" type="file"
+                  accept="image/png,image/jpeg,image/webp"><img id="schoolLogoPreview" class="school-logo-preview"
+                  alt="Vista previa del logotipo" hidden></div>
+            </div>
+            <div id="schoolSettingsNotice" class="settings-notice" role="status"></div><button class="primary"
+              type="submit">Guardar configuración</button>
+          </form>
+        </section>
+        <section class="settings-card">
+          <div class="settings-card-heading">
+            <div>
+              <h2>Usuarios docentes</h2>
+              <p>Registra los datos de los docentes que utilizarán el sistema.</p>
+            </div><span id="teacherCount" class="year-chip">0 docentes</span>
+          </div>
+          <form id="teacherForm">
+            <div class="settings-fields teacher-fields">
+              <div class="field"><label for="teacherName">Nombre completo *</label><input id="teacherName" name="name"
+                  required maxlength="120" placeholder="Nombre y apellidos"></div>
+              <div class="field"><label for="teacherUsername">Nombre de usuario *</label><input id="teacherUsername"
+                  name="username" required minlength="3" maxlength="40" placeholder="Usuario para identificarle"></div>
+              <div class="field"><label for="teacherEmail">Correo electrónico *</label><input id="teacherEmail"
+                  name="email" type="email" required maxlength="120" placeholder="docente@centro.edu"></div>
+            </div>
+            <div id="teacherNotice" class="settings-notice" role="status"></div><button class="primary" type="submit">＋
+              &nbsp;Crear usuario docente</button>
+          </form>
+          <div class="table-wrap teachers-wrap">
+            <table class="student-table">
+              <thead>
+                <tr>
+                  <th>Docente</th>
+                  <th>Usuario</th>
+                  <th>Correo</th>
+                  <th>Rol</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="teacherRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+  <div id="modalOverlay" class="overlay" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+      <div class="modal-head">
+        <div>
+          <h2 id="formTitle">Nueva matrícula</h2>
+          <p>Completa la ficha del estudiante. Los campos con * son obligatorios.</p>
+        </div><button id="closeModal" class="close" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <div id="formNotice" class="notice" role="status"></div>
+      <form id="studentForm">
+        <div class="form-body">
+          <section class="form-section">
+            <h3>Datos personales del alumno</h3>
+            <div class="form-grid">
+              <div class="field"><label for="firstName">Primer nombre *</label><input id="firstName" name="firstName"
+                  maxlength="60" required></div>
+              <div class="field"><label for="secondName">Segundo nombre</label><input id="secondName" name="secondName"
+                  maxlength="60"></div>
+              <div class="field"><label for="firstSurname">Primer apellido *</label><input id="firstSurname"
+                  name="firstSurname" maxlength="60" required></div>
+              <div class="field"><label for="secondSurname">Segundo apellido</label><input id="secondSurname"
+                  name="secondSurname" maxlength="60"></div>
+              <div class="field"><label for="birthRecord">Número de partida de nacimiento</label><input id="birthRecord"
+                  name="birthRecord" maxlength="40"></div>
+              <div class="field"><label for="sex">Sexo</label><select id="sex" name="sex">
+                  <option value="">Selecciona</option>
+                  <option>F</option>
+                  <option>M</option>
+                </select></div>
+              <div class="field"><label for="age">Edad</label><input id="age" name="age" type="number" min="1"
+                  max="100"></div>
+              <div class="field"><label for="municipality">Municipio de nacimiento</label><input id="municipality"
+                  name="municipality" maxlength="80"></div>
+              <div class="field"><label for="department">Departamento</label><input id="department" name="department"
+                  maxlength="80"></div>
+              <div class="field"><label for="birthDay">Día de nacimiento</label><input id="birthDay" name="birthDay"
+                  type="number" min="1" max="31"></div>
+              <div class="field"><label for="birthMonth">Mes de nacimiento</label><input id="birthMonth"
+                  name="birthMonth" maxlength="20" placeholder="Mes"></div>
+              <div class="field"><label for="birthYear">Año de nacimiento</label><input id="birthYear" name="birthYear"
+                  type="number" min="1900" max="2100"></div>
+              <div class="field"><label for="nationality">Nacionalidad</label><input id="nationality" name="nationality"
+                  maxlength="60"></div>
+            </div>
+          </section>
+          <section class="form-section">
+            <h3>Datos académicos</h3>
+            <div class="form-grid">
+              <div class="field span2"><label for="previousSchool">Escuela o instituto de procedencia</label><input
+                  id="previousSchool" name="previousSchool" maxlength="140"></div>
+              <div class="field"><label for="previousSchoolPlace">Lugar</label><input id="previousSchoolPlace"
+                  name="previousSchoolPlace" maxlength="100"></div>
+              <div class="field"><label for="course">Curso en que se matriculará *</label><select id="course"
+                  name="course" required>
+                  <option value="">Selecciona</option>
+                  <option>7mo</option>
+                  <option>8vo</option>
+                  <option>9no</option>
+                  <option>10mo</option>
+                  <option>11mo</option>
+                  <option>12mo</option>
+                </select></div>
+              <div class="field"><label for="modality">Modalidad</label><select id="modality" name="modality">
+                  <option value="">Selecciona una modalidad</option>
+                  <option value="TERCER CICLO DE EDUCACIÓN BÁSICA">TERCER CICLO DE EDUCACIÓN BÁSICA</option>
+                  <option value="BACHILLERATO EN CIENCIAS Y HUMANIDADES">BACHILLERATO EN CIENCIAS Y HUMANIDADES</option>
+                  <option value="BACHILLERATO TÉCNICO PROFESIONAL EN INFORMÁTICA">BACHILLERATO TÉCNICO PROFESIONAL EN
+                    INFORMÁTICA</option>
+                  <option value="BACHILLERATO TÉCNICO PROFESIONAL EN CONTADURÍA Y FINANZAS">BACHILLERATO TÉCNICO
+                    PROFESIONAL EN CONTADURÍA Y FINANZAS</option>
+                </select></div>
+              <div class="field"><label for="section">Sección *</label><select id="section" name="section" required>
+                  <option value="">Selecciona</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select></div>
+              <div class="field"><label for="shift">Jornada *</label><select id="shift" name="shift" required>
+                  <option value="">Selecciona</option>
+                  <option>Matutina</option>
+                  <option>Vespertina</option>
+                  <option>Nocturna</option>
+                </select></div>
+              <div class="field"><label for="delayedSubject">Materia retrasada</label><input id="delayedSubject"
+                  name="delayedSubject" maxlength="100"></div>
+              <div class="field"><label for="repeatsWith">Repite con</label><input id="repeatsWith" name="repeatsWith"
+                  maxlength="100"></div>
+              <div class="field"><label for="conditionalEnrollment">Matrícula condicionada por</label><input
+                  id="conditionalEnrollment" name="conditionalEnrollment" maxlength="120"></div>
+            </div>
+          </section>
+          <section class="form-section">
+            <h3>Datos familiares</h3>
+            <div class="form-grid">
+              <div class="field"><label for="motherName">Nombre de la madre</label><input id="motherName"
+                  name="motherName" maxlength="120"></div>
+              <div class="field"><label for="motherOccupation">Ocupación de la madre</label><input id="motherOccupation"
+                  name="motherOccupation" maxlength="100"></div>
+              <div class="field"><label for="motherPhone">Celular de la madre</label><input id="motherPhone"
+                  name="motherPhone" type="tel" maxlength="25"></div>
+              <div class="field"><label for="fatherName">Nombre del padre</label><input id="fatherName"
+                  name="fatherName" maxlength="120"></div>
+              <div class="field"><label for="fatherOccupation">Ocupación del padre</label><input id="fatherOccupation"
+                  name="fatherOccupation" maxlength="100"></div>
+              <div class="field"><label for="fatherPhone">Celular del padre</label><input id="fatherPhone"
+                  name="fatherPhone" type="tel" maxlength="25"></div>
+              <div class="field"><label for="recommendedName">Recomendado por</label><input id="recommendedName"
+                  name="recommendedName" maxlength="120"></div>
+              <div class="field"><label for="recommendedOccupation">Ocupación</label><input id="recommendedOccupation"
+                  name="recommendedOccupation" maxlength="100"></div>
+              <div class="field"><label for="recommendedPhone">Teléfono celular</label><input id="recommendedPhone"
+                  name="recommendedPhone" type="tel" maxlength="25"></div>
+              <div class="field"><label for="guardian">Responsable / encargado</label><input id="guardian"
+                  name="guardian" maxlength="120"></div>
+              <div class="field"><label for="guardianOccupation">Ocupación del responsable</label><input
+                  id="guardianOccupation" name="guardianOccupation" maxlength="100"></div>
+              <div class="field"><label for="guardianPhone">Teléfono del encargado</label><input id="guardianPhone"
+                  name="guardianPhone" type="tel" maxlength="25"></div>
+              <div class="field"><label for="additionalPhone">Teléfono adicional</label><input id="additionalPhone"
+                  name="additionalPhone" type="tel" maxlength="25"></div>
+              <div class="field"><label for="addressVillage">Aldea</label><input id="addressVillage"
+                  name="addressVillage" maxlength="100"></div>
+              <div class="field"><label for="addressNeighborhood">Barrio</label><input id="addressNeighborhood"
+                  name="addressNeighborhood" maxlength="100"></div>
+              <div class="field"><label for="address">Dirección exacta</label><input id="address" name="address"
+                  maxlength="180"></div>
+              <div class="field"><label for="enrolledBy">Quien matriculó</label><input id="enrolledBy" name="enrolledBy"
+                  maxlength="120"></div>
+              <div class="field"><label for="enrolledByIdentity">Identidad de quien matriculó</label><input
+                  id="enrolledByIdentity" name="enrolledByIdentity" maxlength="25"></div>
+            </div>
+          </section>
+          <section class="form-section">
+            <h3>Salud y observaciones</h3><label class="checkline"><input id="hasCondition" name="hasCondition"
+                type="checkbox"> El estudiante padece una enfermedad o condición que debemos conocer</label>
+            <div class="form-grid" style="margin-top:12px">
+              <div class="field span2"><label for="condition">Enfermedad, alergia o condición</label><input
+                  id="condition" name="condition" maxlength="160" placeholder="Ej. asma, alergia a medicamentos"></div>
+              <div class="field"><label for="emergencyPhone">Contacto de emergencia</label><input id="emergencyPhone"
+                  name="emergencyPhone" type="tel" maxlength="25"></div>
+              <div class="field full"><label for="notes">Observaciones</label><textarea id="notes" name="notes"
+                  maxlength="500" placeholder="Información adicional para el centro educativo"></textarea></div>
+            </div>
+          </section>
+        </div>
+        <div class="modal-foot"><button id="cancelForm" class="outline" type="button">Cancelar</button><button
+            class="outline" type="submit" name="saveAction" value="save">Guardar ficha</button><button class="primary"
+            type="submit" name="saveAction" value="save-print">Guardar e imprimir</button></div>
+      </form>
+    </section>
+  </div>
+  <section id="printSheet" class="print-sheet" aria-label="Ficha imprimible"></section>
+  <script>
+    (() => {
+      'use strict';
+      const CURRENT_YEAR = new Date().getFullYear();
+      const KEY = `aula-clara-matricula-${CURRENT_YEAR}-v1`, SETTINGS_KEY = 'aula-clara-school-settings-v1', TEACHERS_KEY = 'aula-clara-teachers-v1'; let students = loadStudents(); let editingId = null; let printId = null; let schoolSettings = loadSettings(); let teachers = loadTeachers(); let pendingLogo = null;
+      const LOGO_CLEANUP_KEY = 'aula-clara-old-logo-removed-v1'; if (!localStorage.getItem(LOGO_CLEANUP_KEY)) { if (schoolSettings.logo) { delete schoolSettings.logo; try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(schoolSettings)) } catch { } } try { localStorage.setItem(LOGO_CLEANUP_KEY, '1') } catch { } }
+      const $ = id => document.getElementById(id);
+      function updateCurrentYearLabels() {
+        document.title = `Matrícula ${CURRENT_YEAR}`;
+        $('authYearLabel').textContent = `Matrícula ${CURRENT_YEAR}`;
+        $('navStudentsYearLabel').textContent = `Matrícula ${CURRENT_YEAR}`;
+        $('schoolYearLabel').textContent = `Año escolar · ${CURRENT_YEAR}`;
+        $('currentYearChip').innerHTML = `&nbsp;Año lectivo ${CURRENT_YEAR}`;
+        $('recordsYearNote').textContent = `Registros del año ${CURRENT_YEAR}`;
+        $('birthYear').max = String(CURRENT_YEAR);
+      }
+      updateCurrentYearLabels();
+      const EMBEDDED_QR_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAAHCAQAAAABUY/ToAAADiElEQVR4nO2cS4rjShBFT3QKPJTgLaCWIu2s8M6kpXgBD6RhgcXtQX7tqn6DpoxVfhED4Y8OSkEQcSMjM038nS2//hIEJ5100kknnXTSyeORlqyDxTrMBoDNWpvK1+nJo3XykOQoSVrB3ldgvJixvEmMK0hrEBAkSbolnzFaJw9Jbim+6Px2RTNBjJcOnYcgm9gNgBiqnj9aJ49Edp9/2jsAg/7DoP/XtAzf+kwnX5wcLx3QS7B1aN5OMXlpftwznXwJspc0AzYRpHnrkCTZlP+1CZB0/b5nOvlS5GJmqRojCWubtg7GFez90gHssSz7rmc6+SJk1ENNw2N5+4hSSMvbh7EMgXzLbVvkZ72nk48jY8qqNXuq4/tUnMWLVkhVvq6JmH/Wezr5ODJ6ROsga1C+lH+z50Tnch9y8saSRxDEuAZp7lUCT0juMwOae6Vb3IecvLEcabLN/RVG5Uu8ZYVYusl9yMk/krvFQoztJJ2HIJ2tI9X7vaR5M0v3PX+0Th6IzJo6prGb6JOSF8Q/8Fzm5NdW67JG9sS8FWu1EB2pUUbuQ07eWK23kpfET8mRGqGU6reQfnMfcjJZ6bkGGduA0YMWA7FZuW3vtEygZcDnqZ28s1qX5ZlF0nKi9Ona1GWURUQeh5wsVueHqthJqS3PWEdLmU7uQ07eWdY5SU6n5kYsznLXQ2tbprkecvLGqh66GhiC3RjnIAMQ7Ng4C9i6q9hCjks/6z2dfBxZchkkPVRkz1xrNT51zjwOOVmsCqAkioqwplb5QNtNcx9ysrWqqbP2CU0cSipIdYcHroecvLM2l0EKPGNZBVIKthSH8HlqJ++tzg9lKUSeFVIp8KEVSu5DTrZW1sLundi6K/Qrtgxr9BeLS2Oj7Z3Y/nnmaJ08Iln69jSziM3u1jJPXS+uh5z8gjQbgmA7CTYzlri7FXS2k2zqr3EPvk1HGK2TxyLbtR/KdXy7kigvoG5aaq6HnPxMNud+pAZZkObtFHcr2gRAXuX49NE6eUhyrKLo0mHv625t43Wz8rUktB/5nk4+kMznfpDOZwhKoSluWZRYzIxl2H39kJP/TbazjWtJaOxWm/fpliOM1slDkil5dfEkorjYgyqK8Djk5L0189TN7tY1/51aZe3mRa/LnPyKrOd+LAPEY/QgSGdLu8qAJKdt+p5nOvkipPkZ50466aSTTjrp5P+c/A1XhVDmz3wkCAAAAABJRU5ErkJggg==';
+      const nativePrint = window.print.bind(window);
+      window.print = () => {
+        const qrImage = $('printSheet').querySelector('.print-qrcode-img');
+        const student = students.find(item => item.id === printId);
+        if (!qrImage || !student) return nativePrint();
+        const qrDataUrl = studentQRDataUrl(student);
+        if (!qrDataUrl) return nativePrint();
+        qrImage.src = qrDataUrl;
+        const openPrintDialog = () => nativePrint();
+        if (typeof qrImage.decode === 'function') qrImage.decode().catch(() => { }).then(openPrintDialog);
+        else { qrImage.addEventListener('load', openPrintDialog, { once: true }); qrImage.addEventListener('error', openPrintDialog, { once: true }); }
+      };
+      function loadStudents() { try { const data = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(data) ? data : [] } catch { return [] } }
+      function save() { localStorage.setItem(KEY, JSON.stringify(students)) }
+      function loadSettings() { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{"name":""}') } catch { return { name: '' } } }
+      function loadTeachers() { try { const data = JSON.parse(localStorage.getItem(TEACHERS_KEY) || '[]'); return Array.isArray(data) ? data : [] } catch { return [] } }
+      function saveTeachers() { localStorage.setItem(TEACHERS_KEY, JSON.stringify(teachers)) }
+      function esc(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
+      function slug(value) { return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') }
+      let activeUser = null;
+      function authUsers() { return teachers.filter(t => t.passwordHash && t.passwordSalt) }
+      function setAuthNotice(id, message) { const el = $(id); el.textContent = message; el.className = 'auth-notice visible' }
+      function refreshAuthScreen() { const users = authUsers(); $('authScreen').hidden = false; $('appShell').hidden = true; $('loginForm').hidden = users.length === 0; $('setupAdminForm').hidden = users.length !== 0; $('registerForm').hidden = true; $('recoverForm').hidden = true; $('authActions').hidden = false; $('showRegister').hidden = false; $('showLogin').hidden = true; $('showRecovery').hidden = users.length === 0; $('recoveryBack').hidden = true; $('authIntro').textContent = users.length ? 'Inicia sesión con tu cuenta docente.' : 'Configura el acceso inicial del centro educativo.'; $('authSchoolName').textContent = schoolSettings.name?.trim() || 'Bienvenido';['loginNotice', 'setupNotice', 'registerNotice', 'recoverNotice'].forEach(id => $(id).className = 'auth-notice'); if (schoolSettings.logo) { $('authLogo').src = schoolSettings.logo; $('authLogoWrap').hidden = false } else { $('authLogo').removeAttribute('src'); $('authLogoWrap').hidden = true } }
+      async function passwordDigest(password, saltBytes) { if (!crypto?.subtle) throw new Error('El navegador no permite proteger contraseñas en esta ubicación. Abre la aplicación desde localhost o un sitio seguro.'); const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']); const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: saltBytes, iterations: 150000, hash: 'SHA-256' }, material, 256); return Array.from(new Uint8Array(bits), b => b.toString(16).padStart(2, '0')).join('') }
+      function randomSalt() { return Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join('') }
+      function hexBytes(value) { return new Uint8Array(value.match(/.{2}/g).map(pair => parseInt(pair, 16))) }
+      async function makePassword(password) { const salt = randomSalt(); return { passwordSalt: salt, passwordHash: await passwordDigest(password, hexBytes(salt)) } }
+      async function verifyPassword(user, password) { try { return user.passwordHash === await passwordDigest(password, hexBytes(user.passwordSalt)) } catch { return false } }
+      function startSession(user) { activeUser = user; $('authScreen').hidden = true; $('appShell').hidden = false; $('navSettings').hidden = user.role !== 'Administrador'; showMainView(false) }
+      $('loginForm').addEventListener('submit', async e => { e.preventDefault(); const form = e.currentTarget, button = form.querySelector('button[type="submit"]'); button.disabled = true; const username = $('loginUsername').value.trim(), password = $('loginPassword').value, user = authUsers().find(t => slug(t.username) === slug(username)); if (user && await verifyPassword(user, password)) { form.reset(); startSession(user) } else setAuthNotice('loginNotice', 'El usuario o la contraseña no son correctos.'); button.disabled = false });
+      $('showRegister').addEventListener('click', () => { $('loginForm').hidden = true; $('setupAdminForm').hidden = true; $('recoverForm').hidden = true; $('registerForm').hidden = false; $('showRegister').hidden = true; $('showLogin').hidden = false; $('showLogin').textContent = authUsers().length ? 'Volver a iniciar sesión' : 'Volver'; $('showRecovery').hidden = true; $('registerNotice').className = 'auth-notice'; $('registerName').focus() }); $('showLogin').addEventListener('click', () => { $('registerForm').hidden = true; $('recoverForm').hidden = true; const hasAccounts = authUsers().length > 0; $('loginForm').hidden = !hasAccounts; $('setupAdminForm').hidden = hasAccounts; $('showRegister').hidden = false; $('showLogin').hidden = true; $('showRecovery').hidden = !hasAccounts; $('loginUsername').focus() });
+      $('showRecovery').addEventListener('click', () => { $('loginForm').hidden = true; $('registerForm').hidden = true; $('setupAdminForm').hidden = true; $('recoverForm').hidden = false; $('showRegister').hidden = true; $('showLogin').hidden = true; $('showRecovery').hidden = true; $('recoveryBack').hidden = false; $('authIntro').textContent = 'Recuperación de contraseña'; $('recoverNotice').className = 'auth-notice'; $('recoverEmail').focus() }); $('recoveryBack').addEventListener('click', () => { const hasAccounts = authUsers().length > 0; $('recoverForm').hidden = true; $('loginForm').hidden = !hasAccounts; $('setupAdminForm').hidden = hasAccounts; $('authIntro').textContent = hasAccounts ? 'Inicia sesión con tu cuenta docente.' : 'Configura el acceso inicial del centro educativo.'; $('showRegister').hidden = false; $('showRecovery').hidden = !hasAccounts; $('recoveryBack').hidden = true; $('recoverNotice').className = 'auth-notice' });
+      $('recoverForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const requesterEmail = $('recoverEmail').value.trim().toLowerCase();
+        const recoveryEmail = schoolSettings.recoveryEmail?.trim();
+        if (!recoveryEmail) {
+          $('recoverNotice').textContent = 'La administración debe configurar el correo de recuperación en Configuración del centro.';
+          $('recoverNotice').className = 'auth-notice visible';
+          return;
+        }
+        const teacher = teachers.find(item => item.email?.toLowerCase() === requesterEmail);
+        const subject = 'Solicitud de recuperación de contraseña';
+        const body = [
+          'Solicito restablecer mi contraseña de acceso.',
+          '',
+          `Correo registrado: ${requesterEmail}`,
+          teacher ? `Usuario: ${teacher.username}` : ''
+        ].filter(Boolean).join('\n');
+        window.location.href = `mailto:${encodeURIComponent(recoveryEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        $('recoverNotice').textContent = 'Se abrió un correo para enviar tu solicitud a la administración.';
+        $('recoverNotice').className = 'auth-notice visible recovery-info';
+      });
+      $('registerForm').addEventListener('submit', async e => { e.preventDefault(); const form = e.currentTarget, data = Object.fromEntries(new FormData(form)), username = String(data.username).trim(), email = String(data.email).trim().toLowerCase(); if (teachers.some(t => slug(t.username) === slug(username) || t.email?.toLowerCase() === email)) { setAuthNotice('registerNotice', 'Ese usuario o correo ya está registrado.'); return } const button = form.querySelector('button[type="submit"]'); button.disabled = true; try { const credentials = await makePassword(data.password), firstAccount = authUsers().length === 0, teacher = { id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), name: String(data.name).trim(), username, email, role: firstAccount ? 'Administrador' : 'Docente', ...credentials }; teachers.push(teacher); saveTeachers(); renderTeachers(); form.reset(); startSession(teacher) } catch (error) { setAuthNotice('registerNotice', error.message || 'No se pudo crear la cuenta en este navegador.') } finally { button.disabled = false } });
+      $('setupAdminForm').addEventListener('submit', async e => { e.preventDefault(); const form = e.currentTarget, data = Object.fromEntries(new FormData(form)); if (data.password !== data.passwordConfirm) { setAuthNotice('setupNotice', 'Las contraseñas no coinciden.'); return } if (data.password.length < 8) { setAuthNotice('setupNotice', 'La contraseña debe tener al menos 8 caracteres.'); return } if (teachers.some(t => slug(t.username) === slug(data.username))) { setAuthNotice('setupNotice', 'Ese usuario ya existe. Elige otro nombre de usuario.'); return } const button = form.querySelector('button[type="submit"]'); button.disabled = true; try { const credentials = await makePassword(data.password); const user = { id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), name: data.name.trim(), username: data.username.trim(), email: String(data.email || '').trim().toLowerCase(), role: 'Administrador', ...credentials }; teachers.push(user); saveTeachers(); renderTeachers(); form.reset(); startSession(user) } catch (error) { setAuthNotice('setupNotice', error.message || 'No se pudo crear la cuenta en este navegador.') } finally { button.disabled = false } });
+      document.querySelector('#teacherForm .teacher-fields').insertAdjacentHTML('beforeend', '<div class="field"><label for="teacherPassword">Contraseña (mínimo 8 caracteres) *</label><input id="teacherPassword" name="password" type="password" autocomplete="new-password" minlength="8" required></div>');
+      function updateSchoolBranding() { const name = schoolSettings.name?.trim() || `Matrícula ${CURRENT_YEAR}`; $('brandName').textContent = name; $('schoolNameCard').textContent = schoolSettings.name?.trim() || 'Período lectivo'; const logo = $('schoolLogo'), icon = $('brandIcon'); if (schoolSettings.logo && /^data:image\/(png|jpeg|webp);base64,/.test(schoolSettings.logo)) { logo.src = schoolSettings.logo; logo.hidden = false; icon.hidden = false } else { logo.removeAttribute('src'); logo.hidden = true; icon.hidden = true } }
+      function showSettingsNotice(id, message, error = false) { const el = $(id); el.textContent = message; el.className = `settings-notice visible${error ? ' error' : ''}` }
+      function readSchoolImage(file) { if (!file) return Promise.resolve(null); if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) return Promise.reject(new Error('El archivo debe ser PNG, JPG o WebP.')); if (file.size > 1024 * 1024) return Promise.reject(new Error('La imagen no puede superar 1 MB.')); return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => typeof reader.result === 'string' ? resolve(reader.result) : reject(new Error('No se pudo leer la imagen.')); reader.onerror = () => reject(new Error('No se pudo leer la imagen.')); reader.readAsDataURL(file) }) }
+      function renderTeachers() { $('teacherCount').textContent = `${teachers.length} ${teachers.length === 1 ? 'usuario' : 'usuarios'}`; $('teacherRows').innerHTML = teachers.length ? teachers.map(t => `<tr><td><strong>${esc(t.name)}</strong></td><td>${esc(t.username)}</td><td>${esc(t.email || '—')}</td><td><span class="badge">${esc(t.role || 'Docente')}</span>${t.passwordHash ? '' : '<div class="student-sub">Acceso pendiente</div>'}</td><td><button class="teacher-remove" type="button" data-remove-teacher="${esc(t.id)}">Eliminar</button></td></tr>`).join('') : `<tr><td class="empty" colspan="5"><strong>No hay docentes registrados</strong>Usa el formulario para crear usuarios.</td></tr>` }
+      function showMainView(settings = false) { ['dashboardHeading', 'dashboardStats', 'dashboardReport', 'studentList'].forEach(id => $(id).hidden = settings); $('settingsView').hidden = !settings; $('navStudents').classList.toggle('active', !settings); $('navSettings').classList.toggle('active', settings); if (settings) { $('schoolNameInput').value = schoolSettings.name || ''; $('recoveryEmailInput').value = schoolSettings.recoveryEmail || ''; const preview = $('schoolLogoPreview'); if (schoolSettings.logo) { preview.src = schoolSettings.logo; preview.hidden = false } else { preview.removeAttribute('src'); preview.hidden = true } pendingLogo = null; renderTeachers() } }
+      $('navStudents').addEventListener('click', () => showMainView(false)); $('navSettings').addEventListener('click', () => showMainView(true)); $('exitApp').addEventListener('click', () => { if (!confirm(`¿Deseas cerrar la sesión${activeUser?.name ? ' de ' + activeUser.name : ''}?`)) return; activeUser = null; $('appShell').hidden = true; $('navSettings').hidden = false; $('loginPassword').value = ''; refreshAuthScreen(); $('loginUsername').focus() });
+      $('schoolLogoInput').addEventListener('change', async e => { const file = e.currentTarget.files[0]; if (!file) { pendingLogo = null; return } try { pendingLogo = await readSchoolImage(file); $('schoolLogoPreview').src = pendingLogo; $('schoolLogoPreview').hidden = false; $('schoolSettingsNotice').className = 'settings-notice' } catch (error) { e.currentTarget.value = ''; pendingLogo = null; showSettingsNotice('schoolSettingsNotice', error.message, true) } });
+      $('schoolSettingsForm').addEventListener('submit', e => { e.preventDefault(); schoolSettings.name = $('schoolNameInput').value.trim(); schoolSettings.recoveryEmail = $('recoveryEmailInput').value.trim().toLowerCase(); if (pendingLogo) schoolSettings.logo = pendingLogo; try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(schoolSettings)); pendingLogo = null; $('schoolLogoInput').value = ''; updateSchoolBranding(); showSettingsNotice('schoolSettingsNotice', 'La configuración del centro se guardó correctamente.') } catch (error) { showSettingsNotice('schoolSettingsNotice', 'No se pudo guardar. La imagen puede ser demasiado grande para el almacenamiento del navegador.', true) } });
+      $('teacherForm').addEventListener('submit', async e => { e.preventDefault(); const teacherForm = e.currentTarget, form = new FormData(teacherForm), name = String(form.get('name')).trim(), username = String(form.get('username')).trim(), email = String(form.get('email')).trim().toLowerCase(), password = String(form.get('password')); if (teachers.some(t => slug(t.username) === slug(username) || (email && t.email?.toLowerCase() === email))) { showSettingsNotice('teacherNotice', 'Ese usuario o correo ya está registrado.', true); return } let createdTeacher = null; const button = teacherForm.querySelector('button[type="submit"]'); button.disabled = true; try { const credentials = await makePassword(password); createdTeacher = { id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), name, username, email, role: 'Docente', ...credentials }; teachers.push(createdTeacher); saveTeachers(); teacherForm.reset(); renderTeachers(); showSettingsNotice('teacherNotice', 'El usuario docente se creó correctamente.') } catch (error) { if (createdTeacher) teachers = teachers.filter(t => t.id !== createdTeacher.id); showSettingsNotice('teacherNotice', error.message || 'No se pudo guardar el usuario en este navegador.', true) } finally { button.disabled = false } });
+      $('teacherRows').addEventListener('click', e => { const button = e.target.closest('[data-remove-teacher]'); if (!button) return; const teacher = teachers.find(t => t.id === button.dataset.removeTeacher); if (teacher && confirm(`¿Eliminar el usuario docente ${teacher.name}?`)) { teachers = teachers.filter(t => t.id !== teacher.id); saveTeachers(); renderTeachers() } });
+      function render() {
+        const query = slug($('searchInput').value.trim()), grade = $('gradeFilter').value, section = $('sectionFilter').value, shift = $('shiftFilter').value;
+        const rows = students.filter(s => (!query || slug(s.fullName + ' ' + s.identity).includes(query)) && (!grade || s.grade === grade) && (!section || s.section === section) && (!shift || s.shift === shift)).sort((a, b) => a.fullName.localeCompare(b.fullName, 'es'));
+        $('totalStat').textContent = students.length; $('gradesStat').textContent = new Set(students.map(s => s.grade)).size; $('morningStat').textContent = students.filter(s => s.shift === 'Matutina').length; $('afternoonStat').textContent = students.filter(s => s.shift === 'Vespertina').length; $('nightStat').textContent = students.filter(s => s.shift === 'Nocturna').length; $('healthStat').textContent = students.filter(s => s.hasCondition && s.condition).length;
+        $('studentRows').innerHTML = rows.length ? rows.map(s => `<tr><td><div class="student-name">${esc(s.fullName)}</div><div class="student-sub">Ficha ${esc(s.number)}</div></td><td><span class="badge">${esc(s.grade)} · Sección ${esc(s.section)}</span>${s.modality ? `<div class="student-sub">${esc(s.modality)}</div>` : ''}</td><td>${esc(s.shift)}</td><td>${esc(s.identity || '—')}</td><td>${s.hasCondition && s.condition ? `<span class="health">${esc(s.condition)}</span>` : '—'}</td><td><div class="row-actions"><button class="icon-btn" data-action="print" data-id="${esc(s.id)}" title="Imprimir ficha" aria-label="Imprimir ficha"><svg viewBox="0 0 24 24" fill="none"><path d="M7 8V4h10v4M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2m-10-3h10v6H7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></button><button class="icon-btn" data-action="edit" data-id="${esc(s.id)}" title="Editar" aria-label="Editar"><svg viewBox="0 0 24 24" fill="none"><path d="m14 5 5 5M4 20l4.2-.8L20 7.4 16.6 4 4.8 15.8 4 20Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></button><button class="icon-btn delete" data-action="delete" data-id="${esc(s.id)}" title="Eliminar" aria-label="Eliminar"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></td></tr>`).join('') : `<tr><td class="empty" colspan="6"><strong>${students.length ? 'No hay resultados' : 'Aún no hay estudiantes matriculados'}</strong>${students.length ? 'Prueba con otros filtros o términos.' : 'Agrega una matrícula para comenzar a organizar el año escolar.'}</td></tr>`;
+        updateFilters(); renderGradeReport();
+      }
+      function updateFilters() { const values = { gradeFilter: [...new Set(students.map(s => s.grade))].sort((a, b) => a.localeCompare(b, 'es')), sectionFilter: [...new Set(students.map(s => s.section))].sort() }; for (const [id, list] of Object.entries(values)) { const el = $(id), value = el.value, label = id === 'gradeFilter' ? 'Todos los grados' : 'Todas las secciones'; el.innerHTML = `<option value="">${label}</option>` + list.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join(''); if (list.includes(value)) el.value = value } }
+      const REPORT_GRADES = [['7mo', 'Séptimo'], ['8vo', 'Octavo'], ['9no', 'Noveno'], ['10mo', 'Décimo'], ['11mo', 'Undécimo'], ['12mo', 'Duodécimo']];
+      function gradeLevel(student) { const value = String(student.course || student.grade || ''); const match = value.match(/(10|11|12|7|8|9)/); return match ? `${match[1]}${({ '7': 'mo', '8': 'vo', '9': 'no', '10': 'mo', '11': 'mo', '12': 'mo' })[match[1]]}` : '' }
+      function reportData() { return REPORT_GRADES.map(([key, label]) => { const group = students.filter(s => gradeLevel(s) === key); return { key, label, total: group.length, morning: group.filter(s => s.shift === 'Matutina').length, afternoon: group.filter(s => s.shift === 'Vespertina').length, night: group.filter(s => s.shift === 'Nocturna').length } }) }
+      function modalityOption(value) { const m = slug(value); if (m.includes('tercer ciclo')) return 'TERCER CICLO DE EDUCACIÓN BÁSICA'; if (m.includes('btpi') || m.includes('informat')) return 'BACHILLERATO TÉCNICO PROFESIONAL EN INFORMÁTICA'; if (m.includes('contaduria') || m.includes('finanzas') || m.includes('btp c y f')) return 'BACHILLERATO TÉCNICO PROFESIONAL EN CONTADURÍA Y FINANZAS'; if (m.includes('bch') || m.includes('humanidades')) return 'BACHILLERATO EN CIENCIAS Y HUMANIDADES'; return '' }
+      function normalizedModality(student) { const value = slug(student.modality || ''); if (value.includes('tercer ciclo')) return 'Tercer ciclo de Educacion Basica'; if (value.includes('btpi') || value.includes('informat')) return 'BTPI'; if (value.includes('btp c y f') || value.includes('finanzas') || value.includes('contaduria')) return 'BTP C y Finanzas'; if (value.includes('bch') || value.includes('humanidades')) return 'BCH'; return 'Sin modalidad' }
+      function grade10ModalityData() { const modalities = ['Tercer ciclo de Educacion Basica', 'BCH', 'BTPI', 'BTP C y Finanzas', 'Sin modalidad']; return modalities.map(modality => { const group = students.filter(s => gradeLevel(s) === '10mo' && normalizedModality(s) === modality); return { modality, total: group.length, morning: group.filter(s => s.shift === 'Matutina').length, afternoon: group.filter(s => s.shift === 'Vespertina').length, night: group.filter(s => s.shift === 'Nocturna').length } }) }
+      function renderGradeReport() { const data = reportData(); const sums = data.reduce((a, r) => ({ total: a.total + r.total, morning: a.morning + r.morning, afternoon: a.afternoon + r.afternoon, night: a.night + r.night }), { total: 0, morning: 0, afternoon: 0, night: 0 }); $('gradeReportRows').innerHTML = data.map(r => `<tr><td><strong>${r.label} (${r.key})</strong></td><td>${r.morning}</td><td>${r.afternoon}</td><td>${r.night}</td><td><strong>${r.total}</strong></td></tr>`).join('') + `<tfoot><tr><td>Total general</td><td>${sums.morning}</td><td>${sums.afternoon}</td><td>${sums.night}</td><td>${sums.total}</td></tr></tfoot>`; const modalities = grade10ModalityData(); const totals = modalities.reduce((a, r) => ({ total: a.total + r.total, morning: a.morning + r.morning, afternoon: a.afternoon + r.afternoon, night: a.night + r.night }), { total: 0, morning: 0, afternoon: 0, night: 0 }); $('grade10ModalityRows').innerHTML = modalities.map(r => `<tr><td>${r.modality}</td><td>${r.morning}</td><td>${r.afternoon}</td><td>${r.night}</td><td><strong>${r.total}</strong></td></tr>`).join('') + `<tfoot><tr><td>Total 10mo</td><td>${totals.morning}</td><td>${totals.afternoon}</td><td>${totals.night}</td><td>${totals.total}</td></tr></tfoot>` }
+      function openForm(student) { editingId = student?.id || null; $('studentForm').reset(); $('formNotice').className = 'notice'; $('formNotice').textContent = ''; $('formTitle').textContent = student ? 'Editar matrícula' : 'Nueva matrícula'; const submitButtons = document.querySelectorAll('#studentForm button[type="submit"]'); submitButtons[0].textContent = student ? 'Guardar cambios' : 'Guardar ficha'; submitButtons[1].textContent = student ? 'Guardar cambios e imprimir' : 'Guardar e imprimir'; if (student) { for (const [key, value] of Object.entries(student)) { const el = $('studentForm').elements.namedItem(key); if (el) { if (el.type === 'checkbox') el.checked = Boolean(value); else el.value = value ?? '' } } if (!student.firstName && student.fullName) { const parts = student.fullName.trim().split(/\s+/); $('firstName').value = parts.shift() || ''; $('firstSurname').value = parts.pop() || ''; $('secondName').value = parts.length > 1 ? parts.shift() : ''; $('secondSurname').value = parts.join(' ') } if (!student.course && student.grade) { const match = String(student.grade).match(/(7|8|9|10|11|12)/); if (match) $('course').value = ({ 7: '7mo', 8: '8vo', 9: '9no', 10: '10mo', 11: '11mo', 12: '12mo' })[match[1]] || '' } if (student.modality) $('modality').value = modalityOption(student.modality) } $('modalOverlay').classList.add('open'); $('modalOverlay').setAttribute('aria-hidden', 'false'); $('firstName').focus() }
+      function closeForm() { $('modalOverlay').classList.remove('open'); $('modalOverlay').setAttribute('aria-hidden', 'true'); editingId = null }
+      $('addStudent').addEventListener('click', () => openForm()); $('closeModal').addEventListener('click', closeForm); $('cancelForm').addEventListener('click', closeForm); $('modalOverlay').addEventListener('click', e => { if (e.target === $('modalOverlay')) closeForm() }); document.addEventListener('keydown', e => { if (e.key === 'Escape') closeForm() });
+      $('studentForm').addEventListener('submit', e => { e.preventDefault(); const shouldPrint = e.submitter?.value === 'save-print'; const data = Object.fromEntries(new FormData(e.currentTarget).entries()); data.fullName = [data.firstName, data.secondName, data.firstSurname, data.secondSurname].filter(Boolean).join(' ').trim(); data.grade = data.course; data.hasCondition = $('hasCondition').checked; data.condition = data.hasCondition ? data.condition.trim() : ''; data.year = CURRENT_YEAR; if (!data.fullName) { return } let savedStudent; if (editingId) { const index = students.findIndex(s => s.id === editingId); if (index >= 0) { students[index] = { ...students[index], ...data }; savedStudent = students[index] } } else { const sequenceKey = KEY + '-sequence'; const next = Math.max(Number(localStorage.getItem(sequenceKey)) || 0, ...students.map(s => Number(s.number) || 0)) + 1; localStorage.setItem(sequenceKey, String(next)); savedStudent = { id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), number: String(next).padStart(4, '0'), ...data }; students.push(savedStudent) } save(); closeForm(); render(); if (shouldPrint && savedStudent) printStudent(savedStudent) });
+      $('studentRows').addEventListener('click', e => { const btn = e.target.closest('[data-action]'); if (!btn) return; const student = students.find(s => s.id === btn.dataset.id); if (!student) return; if (btn.dataset.action === 'edit') openForm(student); if (btn.dataset.action === 'delete' && confirm(`¿Eliminar la matrícula de ${student.fullName}? Esta acción no se puede deshacer.`)) { students = students.filter(s => s.id !== student.id); save(); render() } if (btn.dataset.action === 'print') printStudent(student) });
+      function date(value) { if (!value) return '—'; const [y, m, d] = value.split('-'); return `${d}/${m}/${y}` }
+      function field(label, value, wide = false) { const modalityClass = label === 'Modalidad' ? ' modality-field' : ''; return `<div class="print-field${wide ? ' wide' : ''}${modalityClass}"><span class="print-label">${esc(label)}</span><span class="print-value">${esc(value || '—')}</span></div>` }
+      function printHeader(title, number = '', subtitle = '') {
+        const replaceYear = value => String(value).replace(/\b2027\b/g, String(CURRENT_YEAR));
+        const heading = replaceYear(title), subheading = replaceYear(subtitle);
+        const watermark = schoolSettings.logo ? `<div class="print-watermark"><img src="${esc(schoolSettings.logo)}" alt=""></div>` : '';
+        return `${watermark}<header class="print-head"><div class="print-head-copy">${schoolSettings.name ? `<p class="print-school-name">${esc(schoolSettings.name)}</p>` : ''}<h1>${heading}</h1>${subheading ? `<p>${subheading}</p>` : ''}</div>${number ? `<div class="print-stamp">N.º ${esc(number)}</div>` : ''}</header>`
+      }
+      function studentVerificationHash(value) { let hash = 2166136261; for (let i = 0; i < value.length; i++) { hash ^= value.charCodeAt(i); hash = Math.imul(hash, 16777619) } return (hash >>> 0).toString(16).padStart(8, '0').toUpperCase() }
+      function studentVerificationPayload(student) {
+        const fullName = [student.firstName, student.secondName, student.firstSurname, student.secondSurname].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+        const payload = {
+          tipo: 'ficha-matricula',
+          centro: schoolSettings?.name || 'Instituto Hermann Gmeiner',
+          anio: String(CURRENT_YEAR),
+          ficha: student.number || '',
+          nombre: fullName,
+          identidad: student.identity || '',
+          curso: student.course || '',
+          jornada: student.shift || '',
+          seccion: student.section || '',
+          modalidad: student.modality || '',
+          responsable: student.guardian || '',
+          contactoEmergencia: student.emergencyPhone || ''
+        }; 
+        const signature = studentVerificationHash(JSON.stringify(payload));
+        return { payload, signature }
+      }
+      function studentQRDataUrl(student) {
+        if (typeof qrcode !== 'function') return '';
+        try {
+          const verification = studentVerificationPayload(student);
+          // qrcode-generator expone la función global `qrcode(typeNumber, errorCorrectionLevel)`.
+          const qr = qrcode(0, 'M');
+          const payload = [
+            `FICHA DE MATRÍCULA ${verification.payload.anio}`,
+            `Ficha: ${verification.payload.ficha}`,
+            `Estudiante: ${verification.payload.nombre}`,
+            `Curso: ${verification.payload.curso}`,
+            `Sección: ${verification.payload.seccion}`,
+            `Jornada: ${verification.payload.jornada}`,
+            `Código de verificación: ${verification.signature}`
+          ].join('\n');
+          qr.addData(payload, 'Byte');
+          qr.make();
+          return qr.createDataURL(6, 0);
+        } catch {
+          return '';
+        }
+      }
+      function printStudent(s) { printId = s.id; const verification = studentVerificationPayload(s); const qrImage = 'img/QR_156.png'; const qrCaption = 'Verifique la autenticidad escaneando el código QR en el panel oficial.'; const qrMarkup = `<div class="print-verify-box"><img class="print-qrcode-img" src="${qrImage}" alt="Código QR de verificación de la ficha"><div class="print-verify-meta"><strong>Verificación QR</strong><div class="student-sub">${qrCaption}</div><span class="print-verify-code">Código de verificación: ${verification.signature}</span></div></div>`; $('printSheet').innerHTML = `${printHeader('FICHA DE MATRÍCULA · 2026', s.number)}${qrMarkup}<section class="print-section"><h2>Datos personales del alumno</h2><div class="print-grid">${field('Primer nombre', s.firstName)}${field('Segundo nombre', s.secondName)}${field('Primer apellido', s.firstSurname)}${field('Segundo apellido', s.secondSurname)}${field('Número de partida de nacimiento', s.birthRecord)}${field('Sexo', s.sex)}${field('Edad', s.age)}${field('Nacionalidad', s.nationality)}${field('Lugar de nacimiento · Municipio', s.municipality)}${field('Departamento', s.department)}${field('Día', s.birthDay)}${field('Mes', s.birthMonth)}${field('Año', s.birthYear)}</div></section><section class="print-section"><h2>Datos académicos</h2><div class="print-grid">${field('Escuela o instituto de procedencia', s.previousSchool, true)}${field('Lugar', s.previousSchoolPlace)}${field('Curso', s.course)}${field('Jornada', s.shift)}${field('Sección', s.section)}${field('Modalidad', s.modality)}${field('Materia retrasada', s.delayedSubject)}${field('Repite con', s.repeatsWith)}${field('Matrícula condicionada por', s.conditionalEnrollment, true)}</div></section><section class="print-section"><h2>Datos familiares</h2><div class="print-grid">${field('Madre · nombre', s.motherName)}${field('Ocupación', s.motherOccupation)}${field('Tel. celular', s.motherPhone)}${field('Padre · nombre', s.fatherName)}${field('Ocupación', s.fatherOccupation)}${field('Tel. celular', s.fatherPhone)}${field('Recomendado · nombre', s.recommendedName)}${field('Ocupación', s.recommendedOccupation)}${field('Tel. celular', s.recommendedPhone)}${field('Responsable', s.guardian)}${field('Ocupación del responsable', s.guardianOccupation)}${field('Teléfono del responsable', s.guardianPhone)}${field('Teléfono adicional', s.additionalPhone)}${field('Aldea', s.addressVillage)}${field('Barrio', s.addressNeighborhood)}${field('Dirección exacta', s.address, true)}</div></section><section class="print-section"><h2>Salud y observaciones</h2><div class="print-grid">${field('Enfermedad, alergia o condición', s.hasCondition ? s.condition : 'Ninguna reportada', true)}${field('Contacto de emergencia', s.emergencyPhone)}${field('Observaciones', s.notes, true)}</div></section><p class="print-declaration">Admito que todos los datos anteriores son verídicos y nos comprometemos a cumplir con los reglamentos y disposiciones del Instituto.</p><div class="signature-row"><div class="signature">${esc(s.enrolledBy || 'Firma del Padre o Encargado')}<br>Quien matriculó</div><div class="signature">${esc(s.enrolledByIdentity || 'No. de identidad')}<br>Identidad de quien matriculó</div></div>`; window.print() }
+      function printGradeReport() { const data = reportData(); const totals = data.reduce((a, r) => ({ total: a.total + r.total, morning: a.morning + r.morning, afternoon: a.afternoon + r.afternoon, night: a.night + r.night }), { total: 0, morning: 0, afternoon: 0, night: 0 }); const modalities = grade10ModalityData(); const mTotals = modalities.reduce((a, r) => ({ total: a.total + r.total, morning: a.morning + r.morning, afternoon: a.afternoon + r.afternoon, night: a.night + r.night }), { total: 0, morning: 0, afternoon: 0, night: 0 }); $('printSheet').innerHTML = `${printHeader('REPORTE DE MATRÍCULA POR GRADO', '', 'Año lectivo 2026 · Séptimo a duodécimo grado')}<table class="print-report-table"><thead><tr><th>Grado</th><th>Matutina</th><th>Vespertina</th><th>Nocturna</th><th>Total</th></tr></thead><tbody>${data.map(r => `<tr><td>${r.label} (${r.key})</td><td>${r.morning}</td><td>${r.afternoon}</td><td>${r.night}</td><td>${r.total}</td></tr>`).join('')}</tbody><tfoot><tr><td>Total general</td><td>${totals.morning}</td><td>${totals.afternoon}</td><td>${totals.night}</td><td>${totals.total}</td></tr></tfoot></table><h2 class="print-report-subtitle">Desglose de 10mo por modalidad</h2><table class="print-report-table"><thead><tr><th>Modalidad</th><th>Matutina</th><th>Vespertina</th><th>Nocturna</th><th>Total</th></tr></thead><tbody>${modalities.map(r => `<tr><td>${r.modality}</td><td>${r.morning}</td><td>${r.afternoon}</td><td>${r.night}</td><td>${r.total}</td></tr>`).join('')}</tbody><tfoot><tr><td>Total 10mo</td><td>${mTotals.morning}</td><td>${mTotals.afternoon}</td><td>${mTotals.night}</td><td>${mTotals.total}</td></tr></tfoot></table>`; window.print() }
+      $('printReport').addEventListener('click', printGradeReport); window.addEventListener('afterprint', () => { printId = null }); $('searchInput').addEventListener('input', render);['gradeFilter', 'sectionFilter', 'shiftFilter'].forEach(id => $(id).addEventListener('change', render)); updateSchoolBranding(); renderTeachers(); render(); refreshAuthScreen();
+    })();
+  </script>
+</body>
+
+</html>
